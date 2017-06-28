@@ -53,28 +53,28 @@ win7 x64及以上
 # 使用者文档 #
 
 1. 运行setup文件夹下的`DockerToolbox.exe`安装DockerToolbox。如果系统中已安装Virutal Box和Git，则不需要勾选，否则一定要注意勾选这两项。
-![](../images/docker_toolbox.jpg)
+![](../blob/master/images/docker_toolbox.jpg)
 
 2. 运行`start.bat`，等待自动安装，直至出现如下的界面
-![](../images/shell.jpg)
+![](../blob/master/images/shell.jpg)
 
 3. 输入`1`，回车，绿色文字提示输入工作目录。注意这里输入的是所有项目所在的文件夹。路径使用linux规范，如本机工作目录是`e:\Repository`，则应该输入`/e/Repository`。如果路径输入错误或路径不存在，则会提示，并要求重新输入。随后等待直至出现绿色文字提示`Set Sharedfolder Success!`。按回车继续。
-![](../images/share_folder.jpg)
+![](../blob/master/images/share_folder.jpg)
 
 4. 输入`2`，回车，等待安装开发环境的镜像，直至出现绿色文字`Setup Develop Dockerfile Sucess!`。按回车继续。
-![](../images/setup.jpg)
+![](../blob/master/images/setup.jpg)
 
 5. 输入`3`，回车，进入Docker容器，绿色文字提示`WelCome to Docker! IP: 192.168.99.100`，即为成功，使用这个IP就可以访问Docker。使用命令`cd /develop`，即可进入第3步中挂载的本地工作目录。**注意，步骤1-4只需要执行一次，安装完成后，需要时只执行这一步骤即可进入Docker！除非需要更换工作目录，或更新、重装整个环境，按需要再次执行1-4步。**
-![](../images/enter.jpg)
+![](../blob/master/images/enter.jpg)
     - 通过`cd`命令进入所需的项目
     - 使用npm或cnpm install 必要的module
     - 根据实际要求编译或启动整个项目
     - **复制该Docker项目文件夹根目录的`nginx_config.conf`到工作目录的根目录，修改文件名为`项目名称.conf`(如e:\Repository\website.conf)**
     - 编辑该文件，**不要**修改`listen`端口，修改`server_name`为所需的域名，修改`location`为本地nodejs服务路径。
-    ![](../images/nginx.jpg)
+    ![](../blob/master/images/nginx.jpg)
     - 在控制台输入命令`nginx -s reload`，重启Docker中的nginx服务器，若无任何消息提示，则表示配置文件无误，重启完成。
     - 随后可在本机修改`hosts`文件，将nginx配置文件中填写的域名指向到Docker的IP。
-    ![](../images/hosts.jpg)
+    ![](../blob/master/images/hosts.jpg)
     - 在本机浏览器输入域名，即可访问。
 
 6. 在控制台菜单输入`4`，即可进入Docker Machine的终端，一般用于维护，查看等进阶操作。
