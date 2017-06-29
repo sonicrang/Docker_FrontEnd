@@ -25,8 +25,8 @@ RUN cd /etc/yum.repos.d/ \
     && yum -y install pcre pcre-devel \ 
     && yum -y install zlib zlib-devel \ 
     && yum -y install openssl openssl--devel \
-    && yum -y install autoconf libjpeg libjpeg-devel libpng libpng-devel \
-    && yum -y install freetype freetype-devel curl curl-devel libxml2 libxml2-devel \
+    && yum -y install autoconf automake libjpeg libjpeg-devel libpng libpng-devel libtool libdrm-devel\
+    && yum -y install freetype freetype-devel curl curl-devel libxml2 libxml2-devel nasm\
     && yum -y install glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel \
     && cd /usr/local \
     && tar -zxvf nginx-1.13.1.tar.gz \
