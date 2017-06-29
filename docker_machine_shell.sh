@@ -109,10 +109,11 @@ Boot_Manager(){
   echo -e "${BLUE}-----Docker Machine Manager-----${NC}"
   echo -e "${BLUE}1. Set Sharedfolder ${NC}"
   echo -e "${BLUE}2. Setup Develop Environment ${NC}"
-  echo -e "${BLUE}3. Enter Develop Environment ${NC}"
-  echo -e "${BLUE}4. Enter Docker-Machine Bash ${NC}"
-  echo -e "${BLUE}5. Restart Docker-Machine ${NC}"
-  echo -e "${BLUE}6. Exit ${NC}"
+  echo -e "${BLUE}3. Start/Restart Docker ${NC}"
+  echo -e "${BLUE}4. Enter Develop Environment ${NC}"
+  echo -e "${BLUE}5. Enter Docker-Machine Bash ${NC}"
+  echo -e "${BLUE}6. Restart Docker-Machine ${NC}"
+  echo -e "${BLUE}7. Exit ${NC}"
   read choose
   case $choose in
         1) #1. Set Sharedfolder
@@ -173,7 +174,7 @@ Boot_Manager(){
         read -p "Press enter to continue."
         Boot_Manager
         ;;
-        3) #3. Enter Develop Environment
+        3) #3. Start Docker
         #rm container named heygears
         docker rm -f `docker ps -a -f name=heygears -q` || true
         #run centos:heygears in docker machine
@@ -181,13 +182,18 @@ Boot_Manager(){
         #-p 80:80 means expose port 80
         #-v /develop:/develop means mount docker machine's path "/develop" to docker "/develop" based on setp 1(Set Sharedfolder)
         docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 80:80/tcp -v /develop:/develop centos:heygears'
+        echo -e "${GREEN}Start/Restart Docker Sucess! ${NC}"
+        read -p "Press enter to continue."
+        Boot_Manager
+        ;;
+        4) #4. Enter Develop Environment
         #show docker ip
         echo -e "${GREEN}WelCome to Docker! IP: `docker-machine ip` ${NC}"
         #use winpty enter container
         winpty docker exec -it heygears bash
         Boot_Manager
         ;;
-        4) #4. Enter Bash
+        5) #5. Enter Bash
         cat << EOF
 
 
@@ -219,7 +225,7 @@ EOF
           exec "$BASH" -c "$*"
         fi
         ;;
-        5) #5. Restart Docker-Machine
+        6) #6. Restart Docker-Machine
         if [ "${VM_STATUS}" == "Running" ]; then
           "${DOCKER_MACHINE}" stop "${VM}"
         fi
@@ -227,7 +233,7 @@ EOF
         yes | "${DOCKER_MACHINE}" regenerate-certs "${VM}"
         eval "$(${DOCKER_MACHINE} env --shell=bash --no-proxy ${VM})"
         ;;
-        6) #6. exit
+        7) #7. exit
         exit
         ;;
         *) #other operation

@@ -68,24 +68,33 @@ win7 x64及以上
 4. 输入`2`，回车，等待安装开发环境的镜像，直至出现绿色文字`Setup Develop Dockerfile Sucess!`。按回车继续。
 ![](../master/images/setup.jpg)
 
-5. 输入`3`，回车，进入Docker容器，绿色文字提示`WelCome to Docker! IP: 192.168.99.100`，即为成功，使用这个IP就可以访问Docker。使用命令`cd /develop`，即可进入第3步中挂载的本地工作目录。**注意，步骤1-4只需要执行一次，安装完成后，需要时只执行这一步骤即可进入Docker！除非需要更换工作目录，或更新、重装整个环境，按需要再次执行1-4步。**
-![](../master/images/enter.jpg)
+5. 输入`3`，回车，绿色文字提示`Start/Restart Docker Sucess!`，按回车继续。
+
+6. 输入`4`，回车，进入Docker容器，绿色文字提示`WelCome to Docker! IP: 192.168.99.100`，即为成功，使用这个IP就可以访问Docker。使用命令`cd /develop`，即可进入第3步中挂载的本地工作目录。
+
+    ![](../master/images/enter.jpg)
+    - 初次安装需执行步骤1-4
+    - 更换工作目录，或更新、重装整个环境，按需要执行步骤1-4
+    - 每次开机或重启后需执行一次步骤5，执行步骤6出现“No such container: heygears”提示时执行步骤5
+    - 每次使用只需执行步骤6进入开发环境
+    
+    **开发环境操作示例**
     - 通过`cd`命令进入所需的项目
     - 使用npm或cnpm install 必要的module
     - 根据实际要求编译或启动整个项目
     - **复制该Docker项目文件夹根目录的`nginx_config.conf`到工作目录的根目录，修改文件名为`项目名称.conf`(如e:\Repository\website.conf)**
     - 编辑该文件，**不要**修改`listen`端口，修改`server_name`为所需的域名，修改`location`为本地nodejs服务路径。
     ![](../master/images/nginx.jpg)
-    - 在控制台输入命令`nginx -s reload`，重启Docker中的nginx服务器，若无任何消息提示，则表示配置文件无误，重启完成。
+    - 每次修改"项目名称.conf"文件后，在控制台输入命令`nginx -s reload`，重启Docker中的nginx服务器，若无任何消息提示，则表示配置文件无误，重启完成。
     - 随后可在本机修改`hosts`文件，将nginx配置文件中填写的域名指向到Docker的IP。
     ![](../master/images/hosts.jpg)
     - 在本机浏览器输入域名，即可访问。
 
-6. 在控制台菜单输入`4`，即可进入Docker Machine的终端，一般用于维护，查看等进阶操作。
+7. 在控制台菜单输入`5`，即可进入Docker Machine的终端，一般用于维护，查看等进阶操作。
 
-7. 在控制台菜单输入`5`，可重启Docker Machine。某些时候重启以解决奔溃或者虚拟机异常等问题。
+8. 在控制台菜单输入`6`，可重启Docker Machine。某些时候重启以解决奔溃或者虚拟机异常等问题。
 
-8. 在控制台菜单输入`6`，退出控制台。
+9. 在控制台菜单输入`7`，退出控制台。
 
 # 开发者文档 #
 
