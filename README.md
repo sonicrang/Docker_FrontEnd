@@ -59,7 +59,7 @@ win7 x64及以上
 1. 运行setup文件夹下的`DockerToolbox.exe`安装DockerToolbox。如果系统中已安装Virutal Box和Git，则不需要勾选，否则一定要注意勾选这两项。
 ![](../master/images/docker_toolbox.jpg)
 
-2. 运行`start.bat`，等待自动安装，直至出现如下的界面
+2. 运行`start.bat`，等待自动安装，直至出现如下的界面（若有文字提示“Deault Boot2Docker ISO is out-of-date, downloading the latest release...”可联系开发或维护人员更新boot2docker.iso）
 ![](../master/images/shell.jpg)
 
 3. 输入`1`，回车，绿色文字提示输入工作目录。注意这里输入的是所有项目所在的文件夹。路径使用linux规范，如本机工作目录是`e:\Repository`，则应该输入`/e/Repository`。如果路径输入错误或路径不存在，则会提示，并要求重新输入。随后等待直至出现绿色文字提示`Set Sharedfolder Success!`。按回车继续。

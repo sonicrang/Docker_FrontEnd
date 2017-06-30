@@ -13,27 +13,6 @@ exit
 
 :Admin
 
-:: find git-bash and run docker_machine_shell.sh
-@echo off
-set "FileName=git-bash.exe"
-echo finding git-bash...
-set "git_bash_path=null"
-for %%a in (C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
-  if exist %%a:\ (
-    for /f "delims=" %%b in ('where /r %%a: "%FileName%" 2^>nul') do (
-      if /i "%%~nxb" equ "%FileName%" (
-        set "git_bash_path=%%b"
-        break
-      )
-    )
-  )
-)
-
-if "%git_bash_path%"=="null" (
-  echo can not find git-bash !
-  pause
-  exit
-)
 
 if not exist %~dp0%docker_machine_shell.sh (
   echo can not find docker_machine_shell.sh
@@ -41,4 +20,21 @@ if not exist %~dp0%docker_machine_shell.sh (
   exit
 )
 
-start "%git_bash_path%" "%~dp0%docker_machine_shell.sh"
+set EXISTS_FLAG=0 
+echo %PATH%|find "Git">nul&&set EXISTS_FLAG=1
+
+if "%EXISTS_FLAG%"=="1" (  
+   start "" "%~dp0%docker_machine_shell.sh"
+) else (  
+  echo can not find git
+  pause
+  exit
+) 
+
+
+
+
+
+
+
+
