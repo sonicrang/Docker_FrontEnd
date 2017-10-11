@@ -181,7 +181,7 @@ Boot_Manager(){
         #--privileged=true means run docker with the highest privileges
         #-p 80:80 means expose port 80
         #-v /develop:/develop means mount docker machine's path "/develop" to docker "/develop" based on setp 1(Set Sharedfolder)
-        docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 80:80/tcp -v /develop:/develop centos:heygears'
+        docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 80:80 -p 9081:9081 -v /develop:/develop centos:heygears'
         echo -e "${GREEN}Start/Restart Docker Sucess! ${NC}"
         read -p "Press enter to continue."
         Boot_Manager
