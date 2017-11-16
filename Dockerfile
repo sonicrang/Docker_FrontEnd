@@ -35,6 +35,6 @@ RUN yum -y install nodejs \
 RUN yum clean all
 
 #复制nginx配置
-COPY /source/nginx.conf /etc/nginx/conf/
+COPY /source/nginx.conf /etc/nginx/
 
 CMD ["nginx", "-g", "daemon off;"]
