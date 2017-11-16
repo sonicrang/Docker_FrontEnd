@@ -106,14 +106,15 @@ STEP="Boot_Manager"
 
 Boot_Manager(){
   clear
-  echo -e "${BLUE}-----Docker Machine Manager-----${NC}"
+  echo -e "${BLUE}-----Docker Machine Manager v2.0-----${NC}"
   echo -e "${BLUE}1. Set Sharedfolder ${NC}"
   echo -e "${BLUE}2. Setup Develop Environment ${NC}"
   echo -e "${BLUE}3. Start/Restart Docker ${NC}"
   echo -e "${BLUE}4. Enter Develop Environment ${NC}"
   echo -e "${BLUE}5. Enter Docker-Machine Bash ${NC}"
   echo -e "${BLUE}6. Restart Docker-Machine ${NC}"
-  echo -e "${BLUE}7. Exit ${NC}"
+  echo -e "${BLUE}9. Clean All Docker Images and Container [warning!!!] ${NC}"
+  echo -e "${BLUE}0. Exit ${NC}"
   read choose
   case $choose in
         1) #1. Set Sharedfolder
@@ -233,7 +234,14 @@ EOF
         yes | "${DOCKER_MACHINE}" regenerate-certs "${VM}"
         eval "$(${DOCKER_MACHINE} env --shell=bash --no-proxy ${VM})"
         ;;
-        7) #7. exit
+        9) #9. Clean All Docker Images and Container
+        docker rm -f $(docker ps -aq) || true
+        docker rmi -f $(docker images -q) || true
+        echo -e "${GREEN}Clean All Docker Images and Container Sucess! ${NC}"
+        read -p "Press enter to continue."
+        Boot_Manager
+        ;;
+        0) #0. exit
         exit
         ;;
         *) #other operation
