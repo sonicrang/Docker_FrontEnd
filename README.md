@@ -1,4 +1,10 @@
-# 项目简介 v 2.0 #
+# 项目简介 v 3.0
+
+**release note：**
+
+- 3.0.0：替换images方案，由centos换为node
+- 2.0.0：梳理目录结构与文档
+- 1.0.0：实现基本功能
 
 # 一、心路历程：
 
@@ -11,7 +17,7 @@ http://wurang.net/docker_frontend/
 基于Docker Toolbox，在`start.sh`的基础上实现了以下功能：
 
 - 设置本地工作目录，自动共享至虚拟机Docker Machine（Virtual Box）的`/develop` 下
-- 基于centos:latest和自定义的Dockerfile一键安装前端开发环境
+- 基于node和自定义的Dockerfile一键安装前端开发环境
 - 启动Docker容器
 - 一键启动并进入前端开发环境
 - 进入Docker Machine终端
@@ -24,13 +30,9 @@ http://wurang.net/docker_frontend/
 ## 2.2 前端开发环境内容
 
 其中前端开发环境基于centos镜像，用Dockerfile增加如下功能：
-- 安装常用工具如curl、gcc等
-- 安装中文UTF-8字符集
-- 安装epel-release
 - 安装nginx
-- 安装nodejs
+- 安装nasm
 - 安装cnpm
-- 安装pm2工具
 - 替换nginx配置文件，以读取本机应用的nginx配置
 
 ## 2.3 项目目录结构
@@ -39,10 +41,10 @@ http://wurang.net/docker_frontend/
     - DockerToolbox.exe
 - source
     - nginx.conf
+    - Dockerfile
 - boot2docker.iso
-- centos.tar
+- node.tar（github版由于该文件较大，已经移除）
 - docker_machine_shell.sh
-- Dockerfile
 - nginx_config.conf
 - start.bat
 
@@ -180,15 +182,9 @@ nginx配置，用于替换Docker中安装的nginx的默认配置文件。主要�
 
 boot2docker发布的用于安装docker的linux最小系统。Docker Toolbox安装后，目录中已经有boot2docker.iso文件，但有可能版本不是最新，启动Docker Machine时会检查对应的boot2docker.iso的版本，如果不是最新，会从github下载，还是国内网速影响，经常会失败。所以开发者可以定期通过ss或vpn下载新版的boot2docker.iso，启动脚本时，会自动将该目录的boot2docker.iso拷贝到Docker Machine中。
 
-### 4.2.4 centos.tar【不建议维护】
+### 4.2.4 node.tar【一般维护】
 
-制作的centos:latest 文件的导出包。如果需要更新最新的centos:latest版本，或者使用其他版本如centos:6.5。可以参考“使用者文档”，通过控制台选择`Enter Docker Machine`，进入Docker Machine终端：
-
-- 键入命令`docker images` 查看是否存在centos:latest镜像
-- 如果存在，键入命令`docker rmi -f centos:latest`删除现有的centos:latest
-- 键入命令`docker pull centos:latest`或`docker pull centos:6.5`下载最新的centos或指定版本的centos
-- 若下载非centos:latest，建议使用命令`docker tag centos:6.5 centos:latest`将其命名成latest，因为在[docker_machine_shell.sh]和[Dockerfile]中，很多指令基于centos:latest，以免引起不必要的麻烦。如果你很熟悉docker命令，可以修改[docker_machine_shell.sh]和[Dockerfile]的内容。
-- 键入命令`docker save centos:latest > /e/centos.tar`，就可以将centos:latest导出到E盘根目录，名称为centos.tar
+考虑到国内pull镜像速度较慢，这里导出了官方的node镜像，原始基于node:8，如需升级或替换node版本，可以重新制作对应版本的导出包，并修改Dockerfile的FROM节点配置。
 
 
 ### 4.3.5 docker_machine_shell.sh【一般维护】
@@ -209,9 +205,9 @@ docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 8
 
 
 
-### 4.3.6 Dockerfile【建议维护】
+### 4.3.6 source\Dockerfile【建议维护】
 
-默认基于centos:latest，生成前端开发环境系统镜像的指令集。如需执行其他系统命令，或安装其他软件，可以直接修改Dockerfile。使用者参考使用者文档3.5，重新安装开发环境即可完成更新。
+配合node.tar使用本地镜像，如果网络条件好，可以直接修改FROM的路径或版本，DockerHub获取指定版本的node。如需执行其他系统命令，或安装其他软件，可以直接修改Dockerfile。使用者参考使用者文档3.5，重新安装开发环境即可完成更新。
 
 ### 4.3.7 nginx_config.conf【一般维护】
 

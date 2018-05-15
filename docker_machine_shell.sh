@@ -150,26 +150,24 @@ Boot_Manager(){
         ;;
         2) #2. Setup Develop Environment 
         currentFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-        if [ ! -e "${currentFolder}/Dockerfile" ]; then  
+        if [ ! -e "${currentFolder}/source/Dockerfile" ]; then  
           echo -e "${GREEN}Can not find dockerfile in ${currentFolder} ${NC}"
           read -p "Press enter to continue."
           Boot_Manager
         fi
-        if [ ! -e "${currentFolder}/centos.tar" ]; then  
-          echo -e "${GREEN}Can not find centos.tar in ${currentFolder} ${NC}"
-          read -p "Press enter to continue."
-          Boot_Manager
-        fi
+        # if [ ! -e "${currentFolder}/node.tar" ]; then  
+        #   echo -e "${GREEN}Can not find node.tar in ${currentFolder} ${NC}"
+        #   read -p "Press enter to continue."
+        #   Boot_Manager
+        # fi
 
-        #rm image named centos:latest
-        docker rmi -f centos:latest || true
-        #rm image named centos:heygears
-        docker rmi -f centos:heygears || true
+        #rm image named node:heygears
+        docker rmi -f node:heygears || true
         #load image
-        docker load < "${currentFolder}/centos.tar"
-        #build dockerfile to generate centos:heygears
-        cd "${currentFolder}"
-        docker build --no-cache --rm -t centos:heygears .
+        # docker load < "${currentFolder}/node.tar"
+        #build dockerfile to generate node:heygears
+        cd "${currentFolder}/source"
+        docker build --no-cache --rm -t node:heygears .
         cd -
         echo -e "${GREEN}Setup Develop Dockerfile Sucess! ${NC}"
         read -p "Press enter to continue."
@@ -178,11 +176,11 @@ Boot_Manager(){
         3) #3. Start Docker
         #rm container named heygears
         docker rm -f `docker ps -a -f name=heygears -q` || true
-        #run centos:heygears in docker machine
+        #run node:heygears in docker machine
         #--privileged=true means run docker with the highest privileges
         #-p 80:80 means expose port 80
         #-v /develop:/develop means mount docker machine's path "/develop" to docker "/develop" based on setp 1(Set Sharedfolder)
-        docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 80:80 -p 9081:9081 -v /develop:/develop centos:heygears'
+        docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 80:80 -p 9081:9081 -v /develop:/develop node:heygears'
         echo -e "${GREEN}Start/Restart Docker Sucess! ${NC}"
         read -p "Press enter to continue."
         Boot_Manager
