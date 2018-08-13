@@ -155,16 +155,16 @@ Boot_Manager(){
           read -p "Press enter to continue."
           Boot_Manager
         fi
-        # if [ ! -e "${currentFolder}/node.tar" ]; then  
-        #   echo -e "${GREEN}Can not find node.tar in ${currentFolder} ${NC}"
-        #   read -p "Press enter to continue."
-        #   Boot_Manager
-        # fi
+        if [ ! -e "${currentFolder}/node.tar" ]; then  
+          echo -e "${GREEN}Can not find node.tar in ${currentFolder} ${NC}"
+          read -p "Press enter to continue."
+          Boot_Manager
+        fi
 
         #rm image named node:heygears
         docker rmi -f node:heygears || true
         #load image
-        # docker load < "${currentFolder}/node.tar"
+        docker load < "${currentFolder}/node.tar"
         #build dockerfile to generate node:heygears
         cd "${currentFolder}/source"
         docker build --no-cache --rm -t node:heygears .
@@ -193,36 +193,7 @@ Boot_Manager(){
         Boot_Manager
         ;;
         5) #5. Enter Bash
-        cat << EOF
-
-
-                        ##         .
-                  ## ## ##        ==
-               ## ## ## ## ##    ===
-           /"""""""""""""""""\___/ ===
-      ~~~ {~~ ~~~~ ~~~ ~~~~ ~~~ ~ /  ===- ~~~
-           \______ o           __/
-             \    \         __/
-              \____\_______/
-
-EOF
-        echo -e "${BLUE}docker${NC} is configured to use the ${GREEN}${VM}${NC} machine with IP ${GREEN}$(${DOCKER_MACHINE} ip ${VM})${NC}"
-        echo "For help getting started, check out the docs at https://docs.docker.com"
-        echo
-        
-
-        docker () {
-          MSYS_NO_PATHCONV=1 docker.exe "$@"
-        }
-        export -f docker
-
-        if [ $# -eq 0 ]; then
-          echo "Start interactive shell"
-          exec "$BASH" --login -i
-        else
-          echo "Start shell with command"
-          exec "$BASH" -c "$*"
-        fi
+        docker-machine ssh "${VM}"
         ;;
         6) #6. Restart Docker-Machine
         if [ "${VM_STATUS}" == "Running" ]; then
