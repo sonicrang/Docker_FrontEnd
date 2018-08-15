@@ -106,7 +106,7 @@ STEP="Boot_Manager"
 
 Boot_Manager(){
   clear
-  echo -e "${BLUE}-----Docker Machine Manager v2.0-----${NC}"
+  echo -e "${BLUE}-----Docker Machine Manager v3.0-----${NC}"
   echo -e "${BLUE}1. Set Sharedfolder ${NC}"
   echo -e "${BLUE}2. Setup Develop Environment ${NC}"
   echo -e "${BLUE}3. Start/Restart Docker ${NC}"
