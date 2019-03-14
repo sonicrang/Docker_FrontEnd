@@ -120,7 +120,7 @@ Boot_Manager(){
         1) #1. Creat Volume 
         read -p "Warning!!!  Press Ctrl+C to Quit. Press Enter to Continue."
         read -p "It will delete volume if exist!!! Press Ctrl+C to Quit. Press Enter to Continue."
-        docker-machine ssh "${VM}" 'sudo rm -rf /data && sudo mkdir /data && sudo chmod 777 /data'
+        docker-machine ssh "${VM}" 'sudo rm -rf /mnt/sda1/data && sudo mkdir /mnt/sda1/data && sudo chmod 777 /mnt/sda1/data'
         echo -e "${GREEN}Creat Volume Sucess! ${NC}"
         read -p "Press Enter to Continue."
         Boot_Manager
@@ -150,7 +150,7 @@ Boot_Manager(){
         #--privileged=true means run docker with the highest privileges
         #-p 80:80 means expose port 80
         # expose 445 for samba
-        docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80 -p 445:445 -v /data:/app node:mynode'
+        docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80 -p 445:445 -v /mnt/sda1/data:/app node:mynode'
         echo -e "${GREEN}Start/Restart Container Sucess! ${NC}"
         read -p "Press Enter to Continue."
         Boot_Manager
@@ -176,7 +176,7 @@ Boot_Manager(){
         9) #9. Clean All
         read -p "Warning!!!  Press Ctrl+C to Quit. Press Enter to Continue."
         read -p "Are You Sure to Clean All?  Press Ctrl+C to Quit. Press Enter to Continue."
-        rm -rf /data
+        rm -rf /mnt/sda1/data
         docker rm -f $(docker ps -aq) || true
         docker rmi -f $(docker images -q) || true
         echo -e "${GREEN}Clean All Sucess! ${NC}"
