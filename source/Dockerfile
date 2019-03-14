@@ -1,15 +1,27 @@
-FROM node:8
+# nodejs version
+FROM node:10.15
 
 MAINTAINER wurang
 
+#change apt-get source
+COPY sources.list /etc/apt/sources.list
+
+RUN mkdir /app && chmod 777 /app
+
+# use nginx for proxy and samba for sharefolder
 RUN apt-get update -y && \
-    apt-get install -y nasm nginx && \
+    apt-get install -y nasm bzip2 && \
+    apt-get install -y samba nginx && \
     npm install -g cnpm --registry=https://registry.npm.taobao.org && \
     apt-get clean
 
-#复制nginx配置
+#copy nginx.conf
 COPY nginx.conf /etc/nginx/
 
-CMD ["nginx", "-g", "daemon off;"]
+#copy smb.conf
+COPY smb.conf /etc/samba/
+
+CMD /etc/init.d/samba start && \
+    nginx -g 'daemon off;'
 
 

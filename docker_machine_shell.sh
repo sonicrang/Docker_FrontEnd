@@ -106,90 +106,60 @@ STEP="Boot_Manager"
 
 Boot_Manager(){
   clear
-  echo -e "${BLUE}-----Docker Machine Manager v3.0-----${NC}"
-  echo -e "${BLUE}1. Set Sharedfolder ${NC}"
-  echo -e "${BLUE}2. Setup Develop Environment ${NC}"
-  echo -e "${BLUE}3. Start/Restart Docker ${NC}"
-  echo -e "${BLUE}4. Enter Develop Environment ${NC}"
+  echo -e "${BLUE}-----Docker Machine Manager v4.0-----${NC}"
+  echo -e "${BLUE}1. Creat Volume (will delete volume if exist) [warning!!!] ${NC}"
+  echo -e "${BLUE}2. Build Image ${NC}"
+  echo -e "${BLUE}3. Start/Restart Container ${NC}"
+  echo -e "${BLUE}4. Enter Container ${NC}"
   echo -e "${BLUE}5. Enter Docker-Machine Bash ${NC}"
   echo -e "${BLUE}6. Restart Docker-Machine ${NC}"
-  echo -e "${BLUE}9. Clean All Docker Images and Container [warning!!!] ${NC}"
+  echo -e "${BLUE}9. Clean All (Volume Image Container) [warning!!!] ${NC}"
   echo -e "${BLUE}0. Exit ${NC}"
   read choose
   case $choose in
-        1) #1. Set Sharedfolder
-        hasNoDir=true
-        while ${hasNoDir}
-          do
-          echo -e "${GREEN}Input hostPath:${NC}"
-          read hostPath
-          hostPath=`echo $hostPath | sed "s/\"//g" | sed "s/'//g"`
-          if [ -d "$hostPath" ]; then  
-            hasNoDir=false
-          else
-            hasNoDir=true
-            echo -e "${GREEN}Can not find dir: ${hostPath} ${NC}"
-          fi
-        done
-        if [ "${VM_STATUS}" == "Running" ]; then
-          "${DOCKER_MACHINE}" stop "${VM}"
-        fi
-        #remove sharedfolder named develop
-        "${VBOXMANAGE}" sharedfolder remove "${VM}" --name develop
-        #add sharedfolder named develop
-        "${VBOXMANAGE}" sharedfolder add "${VM}" --name develop --hostpath "${hostPath}" --automount
-        #support symlink
-        "${VBOXMANAGE}" setextradata "${VM}" VBoxInternal2/SharedFoldersEnableSymlinksCreate/develop 1
-        #start vm
-        "${DOCKER_MACHINE}" start "${VM}"
-        yes | "${DOCKER_MACHINE}" regenerate-certs "${VM}"
-        eval "$(${DOCKER_MACHINE} env --shell=bash --no-proxy ${VM})"
-        echo -e "${GREEN}Set Sharedfolder Sucess! ${NC}"
-        read -p "Press enter to continue."
+        1) #1. Creat Volume 
+        read -p "Warning!!!  Press Ctrl+C to Quit. Press Enter to Continue."
+        read -p "It will delete volume if exist!!! Press Ctrl+C to Quit. Press Enter to Continue."
+        docker-machine ssh "${VM}" 'sudo rm -rf /data && sudo mkdir /data && sudo chmod 777 /data'
+        echo -e "${GREEN}Creat Volume Sucess! ${NC}"
+        read -p "Press Enter to Continue."
         Boot_Manager
         ;;
-        2) #2. Setup Develop Environment 
+        2) #2. Build Image 
         currentFolder="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
         if [ ! -e "${currentFolder}/source/Dockerfile" ]; then  
           echo -e "${GREEN}Can not find dockerfile in ${currentFolder} ${NC}"
-          read -p "Press enter to continue."
-          Boot_Manager
-        fi
-        if [ ! -e "${currentFolder}/node.tar" ]; then  
-          echo -e "${GREEN}Can not find node.tar in ${currentFolder} ${NC}"
-          read -p "Press enter to continue."
+          read -p "Press Enter to Continue."
           Boot_Manager
         fi
 
-        #rm image named node:heygears
-        docker rmi -f node:heygears || true
-        #load image
-        docker load < "${currentFolder}/node.tar"
-        #build dockerfile to generate node:heygears
+        #rm image named node:mynode
+        docker rmi -f node:mynode || true
+        #build dockerfile to generate node:mynode
         cd "${currentFolder}/source"
-        docker build --no-cache --rm -t node:heygears .
+        docker build --no-cache --rm -t node:mynode .
         cd -
-        echo -e "${GREEN}Setup Develop Dockerfile Sucess! ${NC}"
-        read -p "Press enter to continue."
+        echo -e "${GREEN}Build Image Sucess! ${NC}"
+        read -p "Press Enter to Continue."
         Boot_Manager
         ;;
-        3) #3. Start Docker
-        #rm container named heygears
-        docker rm -f `docker ps -a -f name=heygears -q` || true
-        #run node:heygears in docker machine
+        3) #3. Start/Restart Container
+        #rm container named myfrontend
+        docker rm -f `docker ps -a -f name=myfrontend -q` || true
+        #run node:myfrontend in docker machine
         #--privileged=true means run docker with the highest privileges
         #-p 80:80 means expose port 80
-        #-v /develop:/develop means mount docker machine's path "/develop" to docker "/develop" based on setp 1(Set Sharedfolder)
-        docker-machine ssh "${VM}" 'docker run -d --name heygears --privileged=true -p 80:80 -p 9081:9081 -v /develop:/develop node:heygears'
-        echo -e "${GREEN}Start/Restart Docker Sucess! ${NC}"
-        read -p "Press enter to continue."
+        # expose 445 for samba
+        docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80 -p 445:445 -v /data:/app node:mynode'
+        echo -e "${GREEN}Start/Restart Container Sucess! ${NC}"
+        read -p "Press Enter to Continue."
         Boot_Manager
         ;;
-        4) #4. Enter Develop Environment
+        4) #4. Enter Container
         #show docker ip
-        echo -e "${GREEN}WelCome to Docker! IP: `docker-machine ip` ${NC}"
+        echo -e "${GREEN}Welcome to Docker! IP: `docker-machine ip` ${NC}"
         #use winpty enter container
-        winpty docker exec -it heygears bash
+        winpty docker exec -it myfrontend bash
         Boot_Manager
         ;;
         5) #5. Enter Bash
@@ -203,11 +173,14 @@ Boot_Manager(){
         yes | "${DOCKER_MACHINE}" regenerate-certs "${VM}"
         eval "$(${DOCKER_MACHINE} env --shell=bash --no-proxy ${VM})"
         ;;
-        9) #9. Clean All Docker Images and Container
+        9) #9. Clean All
+        read -p "Warning!!!  Press Ctrl+C to Quit. Press Enter to Continue."
+        read -p "Are You Sure to Clean All?  Press Ctrl+C to Quit. Press Enter to Continue."
+        rm -rf /data
         docker rm -f $(docker ps -aq) || true
         docker rmi -f $(docker images -q) || true
-        echo -e "${GREEN}Clean All Docker Images and Container Sucess! ${NC}"
-        read -p "Press enter to continue."
+        echo -e "${GREEN}Clean All Sucess! ${NC}"
+        read -p "Press Enter to Continue."
         Boot_Manager
         ;;
         0) #0. exit
