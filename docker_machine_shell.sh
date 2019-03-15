@@ -148,9 +148,10 @@ Boot_Manager(){
         docker rm -f `docker ps -a -f name=myfrontend -q` || true
         #run node:myfrontend in docker machine
         #--privileged=true means run docker with the highest privileges
-        #-p 80:80 means expose port 80
+        #-p 80:80 means expose port 80 for nginx
         # expose 445 for samba
-        docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80 -p 445:445 -v /mnt/sda1/data:/app node:mynode'
+        # expose 9080 for web-dev-server HMR
+        docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80 -p 9080:9080 -p 445:445 -v /mnt/sda1/data:/app node:mynode'
         echo -e "${GREEN}Start/Restart Container Sucess! ${NC}"
         read -p "Press Enter to Continue."
         Boot_Manager

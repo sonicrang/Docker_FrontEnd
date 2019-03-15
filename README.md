@@ -195,10 +195,10 @@ nodejs项目示例
 
   基于Docker Toolbox安装目录的`start.sh`修改的脚本。代码中凡是添加了`##Custom Addition Begin`标注的都是自定义的内容并配有注释，其他的均是Docker Toolbox的`start.sh`源码。
 
-  其他代码不建议修改，但由于默认只开放了80和445端口，如需开启其他端口映射，需要修改下面的代码：
+  其他代码不建议修改，但由于默认只开放了80、9080和445端口，如需开启其他端口映射，需要修改下面的代码：
 
   ```shell
-  docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80 -p 445:445 -v /data:/app node:mynode'
+  docker-machine ssh "${VM}" 'docker run -d --name myfrontend --privileged=true -p 80:80  -p 9080:9080 -p 445:445 -v /data:/app node:mynode'
   ```
 
 - **source\Dockerfile【一般维护】**
