@@ -37,7 +37,7 @@ Boot_Manager(){
         docker build --no-cache --rm -t node:mynode .
         cd -
 
-        echo -e "${GREEN}Input hostPath (Eg. e:\workspace):${NC}"
+        echo -e "${GREEN}Input hostPath (Eg. e:/workspace):${NC}"
         read hostPath
         hostPath=`echo $hostPath | sed "s/\"//g" | sed "s/'//g"`
 
