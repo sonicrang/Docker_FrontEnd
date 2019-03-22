@@ -32,7 +32,7 @@ Requires Microsoft Windows 10 Professional or Enterprise 64-bit.
 
 - 可能会与其他VMWare有冲突
 
-- 默认映射80端口和445端口，其他端口不能访问，如需修改请参考“开发者文档 4.3.5”
+- 默认映射80端口和445端口，其他端口不能访问，如需修改请参考2.5
 
 - **由于共享目录性能较差，如果遇到工作目录app操作速度慢，可以在Windows Defender中把挂载目录添加到排除列表**
 
